@@ -14,7 +14,7 @@ int main(void)
     exit(EXIT_FAILURE);
   }
 
-  while(fscanf(fp,"%*s") == 1)
+  while(fscanf(fp, "%s", buffer) == 1)
   {
     printf("%s\n", buffer);
   }

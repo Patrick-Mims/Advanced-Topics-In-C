@@ -3,50 +3,37 @@
 
 #define INDEX 20
 
-
 // utility function
 void errorCheck(FILE *f)
 {
-    if(f == NULL)
-    {
-      perror("Error");
-      exit(EXIT_FAILURE);
-    }
+  if(f == NULL)
+  {
+    perror("Error");
+    exit(EXIT_FAILURE);
+  }
 }
 
 typedef struct vote
 {
-    int vote;
+  int vote;
 } vote_t;
 
+/* log the vote to a structure, and write it to a file */
 void logVote(vote_t lv)
 {
   printf("My Vote: %d\n", lv.vote);
 
-  FILE *la = NULL;
+  FILE *la = fopen("votes.txt","w+");
 
-  la = fopen("votes.txt","a+");
+  errorCheck(la);
 
   fscanf(stdin, "%d", &lv.vote);
 
-  printf(">>%d\n", lv.vote);
+  printf("> %d\n", lv.vote);
 
-  /*
-  int buffer[9], i = 0, v = 5;
+  fseek(la, 9, SEEK_SET);
 
-  while((v != 0) && (v <= 10))
-  {
-    printf("Vote for your favorite Artist %d: ", i);
-    scanf("%d", &v);
-    printf("Thank you for your vote\n");
-
-    fwrite(&vote, sizeof(vote_t), 1, la);
-
-    i += 1;
-  }
-  */
-
-  errorCheck(la);
+  fwrite(&lv, sizeof(lv), sizeof(1), la);
 
   fclose(la);
 }
@@ -86,11 +73,6 @@ void readArtist(vote_t v)
   logVote(v);
 }
 
-void voteForArtist(FILE *a)
-{
-
-}
-
 int main(void)
 {
   char buffer[INDEX];
@@ -113,8 +95,6 @@ int main(void)
 
   fclose(fp);
 
-  //readResults(fp);
-  //voteForArtist(fp);
   readArtist(vote);
 
   return 0;

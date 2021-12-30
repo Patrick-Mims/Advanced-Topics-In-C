@@ -70,7 +70,8 @@ void readArtist(vote_t *v, char *buff)
 
   while (fscanf(fpArtist, "%s", buff) == 1)
   {
-    // add the name to the structure array
+    /* populate the structure */
+    /* add the name to the structure array */
     strcpy(v[i].name, buff);
     //  printf("%d %s\n", i, v[i].name);
     i = i + 1;
@@ -106,38 +107,24 @@ void display(char *list[], int index, int count)
 int main(void)
 {
   char buffer[INDEX];
-
-  vote_t v[6];
-  /*
-  char *artists[] = {
-      "Diana",
-      "Freida",
-      "Madonna",
-      "Michael",
-      "Prince",
-      "Stevie"};
-  */
-
-  readArtist(v, buffer);
-
-  /*
-    walk the struct here
-  */
-
-  int j = 0;
-  for (; j < 6; j++)
-  {
-    printf("::%s\n", v[j].name);
-  }
-
   int cnt = 0;
   int five = 0;
   int four = 0;
+  int j;
   int one = 0;
   int three = 0;
   int two = 0;
   int vote = 0;
   int zero = 0;
+
+  vote_t v[6];
+
+  readArtist(v, buffer);
+  /* display the names in the structure */
+  for (j = 0; j < 6; j++)
+  {
+    printf("%d. %s\n", j, v[j].name);
+  }
 
   do
   {
@@ -150,6 +137,8 @@ int main(void)
       perror("Vote out of range");
       exit(EXIT_FAILURE);
     }
+
+    // TODO: pass the structure to the display function
 
     /*
         switch (vote)

@@ -8,25 +8,26 @@
 // utility function
 void errorCheck(FILE *f)
 {
-  if(f == NULL)
+  if (f == NULL)
   {
     perror("Error");
     exit(EXIT_FAILURE);
   }
 }
-
-typedef struct vote
+typedef struct
 {
-  int vote;
+  char name[20];
+  int count;
+  int index;
   int rate;
-} vote_t;
+  int vote;
+} vote_t; /* log the vote to a structure, and write it to a file */
 
-/* log the vote to a structure, and write it to a file */
 void logVote(vote_t lv)
 {
   printf("My Vote: %d\n", lv.vote);
 
-  FILE *la = fopen("votes.txt","w+");
+  FILE *la = fopen("votes.txt", "w+");
 
   errorCheck(la);
 
@@ -36,7 +37,7 @@ void logVote(vote_t lv)
 
   fseek(la, sizeof(vote_t), SEEK_SET);
 
-  fwrite(&lv, (lv.rate - 1) *sizeof(lv), sizeof(1), la);
+  fwrite(&lv, (lv.rate - 1) * sizeof(lv), sizeof(1), la);
 
   fclose(la);
 }
@@ -52,31 +53,36 @@ void readResults(FILE *r)
   fclose(r);
 }
 
-void readArtist(vote_t v, char * buff)
+void readArtist(vote_t *v, char *buff)
 {
   int i = 0;
-  //char buffer[INDEX];
+  // char buffer[INDEX];
 
   FILE *fpArtist = NULL;
 
   fpArtist = fopen("artists.txt", "r");
 
-  if(fpArtist == NULL)
+  if (fpArtist == NULL)
   {
     perror("Error");
     exit(EXIT_FAILURE);
   }
 
-  while(fscanf(fpArtist, "%s", buff) == 1)
+  while (fscanf(fpArtist, "%s", buff) == 1)
   {
-    printf("%d. %s\n",i,buff);
+    // add the name to the structure array
+    strcpy(v[i].name, buff);
+    //  printf("%d %s\n", i, v[i].name);
     i = i + 1;
   }
 
   fclose(fpArtist);
-
-  //logVote(v);
+  // logVote(v);
 }
+
+/*
+ * write a struct (int, int), that will hold the index and count data.
+ * */
 
 void display(char *list[], int index, int count)
 {
@@ -86,7 +92,7 @@ void display(char *list[], int index, int count)
 
   fp = fopen("results.txt", "a+");
 
-  if(fp == NULL)
+  if (fp == NULL)
   {
     perror("Error");
     exit(EXIT_FAILURE);
@@ -101,113 +107,84 @@ int main(void)
 {
   char buffer[INDEX];
 
-  vote_t v = { 0 };
-
+  vote_t v[6];
+  /*
   char *artists[] = {
-    "Diana",
-    "Freida",
-    "Madonna",
-    "Michael",
-    "Prince",
-    "Stevie"
-  };
+      "Diana",
+      "Freida",
+      "Madonna",
+      "Michael",
+      "Prince",
+      "Stevie"};
+  */
 
   readArtist(v, buffer);
 
-  int cnt   = 0;
-  int five  = 0;
-  int four  = 0;
-  int three = 0;
-  int vote  = 0;
-  int one   = 0;
-  int two   = 0;
-  int zero  = 0;
+  /*
+    walk the struct here
+  */
 
-  do {
+  int j = 0;
+  for (; j < 6; j++)
+  {
+    printf("::%s\n", v[j].name);
+  }
+
+  int cnt = 0;
+  int five = 0;
+  int four = 0;
+  int one = 0;
+  int three = 0;
+  int two = 0;
+  int vote = 0;
+  int zero = 0;
+
+  do
+  {
     printf("Which artist do you want to vote for [0-5]?\n");
+
     scanf("%d", &vote);
 
-    if(vote > 5)
+    if (vote > 5)
     {
       perror("Vote out of range");
       exit(EXIT_FAILURE);
     }
 
-    switch(vote)
-    {
-      case 0:
-        zero++;
-        display(artists, vote, zero);
-        break;
-      case 1:
-        one++;
-        display(artists, vote, one);
-        break;
-      case 2:
-        two++;
-        display(artists, vote, two);
-        break;
-      case 3:
-        three++;
-        display(artists, vote, three);
-        break;
-      case 4:
-        four++;
-        display(artists, vote, four);
-        break;
-      case 5:
-        five++;
-        display(artists, vote, five);
-        break;
-      default:
-        printf("Nothing Here...");
-    }
+    /*
+        switch (vote)
+        {
+        case 0:
+          zero++;
+          display(artists, vote, zero);
+          break;
+        case 1:
+          one++;
+          display(artists, vote, one);
+          break;
+        case 2:
+          two++;
+          display(artists, vote, two);
+          break;
+        case 3:
+          three++;
+          display(artists, vote, three);
+          break;
+        case 4:
+          four++;
+          display(artists, vote, four);
+          break;
+        case 5:
+          five++;
+          display(artists, vote, five);
+          break;
+        default:
+          printf("Nothing Here...");
+        }
+        */
 
     cnt = cnt + 1;
-  } while(cnt < 8);
-
+  } while (cnt < 8);
 
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

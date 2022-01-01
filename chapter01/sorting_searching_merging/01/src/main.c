@@ -4,6 +4,9 @@
 #include <stdlib.h>
 
 #define INDEX 20
+#define MAX_LENGTH 10
+#define MAX_NAMES 6
+#define MAX_NAME_BUFFER MAX_NAMES + 1
 
 // utility function
 void errorCheck(FILE *f)
@@ -23,8 +26,36 @@ typedef struct
   int vote;
 } vote_t; /* log the vote to a structure, and write it to a file */
 
-void insertionSort(int *list[], int lo, int hi)
+// 0, MAX_NAMES -1, MAX_BUFFER, list[][max]
+// void insertionSort(int lo, int hi, int max, char list[][max])
+void insertionSort(int lo, int hi, int max, char *list[][MAX_LENGTH])
 {
+  char key[max];
+  int i = lo + 1;
+
+  FILE *fp;
+
+  fp = fopen("artists.txt", "w+");
+
+  for (; i <= hi; i++)
+  {
+    int k = (i - 1);
+    // stopped here, need to figure out how to write: *list[][MAX_LENGTH]
+
+    /*
+          while (k >= lo && strcmp(key, list[k]) < 0)
+          {
+            strcpy(list[k + 1], list[k]);
+            --k;
+          }
+
+          strcpy(list[k + 1], key);
+          */
+
+    // fscanf(fp, "%s", *list[][k]);
+  }
+
+  fclose(fp);
 }
 
 void logVote(vote_t lv)
@@ -113,13 +144,21 @@ int main(void)
   if (remove("results.txt"))
   {
     printf("\n\tSuccess: results.txt removed!\n");
-    return 0;
   }
 
   char buffer[INDEX];
 
   // TODO: Try to get rid of these...struct?
   int cnt = 0;
+  char *name[][MAX_LENGTH] = {
+      "Frank",
+      "Sammy",
+      "Ray",
+      "Phil",
+      "Lee",
+      "Bill",
+      "OOOO"};
+
   static int five = 0;
   static int four = 0;
   static int j;
@@ -130,6 +169,8 @@ int main(void)
   static int zero = 0;
 
   vote_t v[6];
+
+  insertionSort(0, MAX_NAMES, MAX_LENGTH, name);
 
   /* populate vote_t v */
   readArtist(v, buffer);
